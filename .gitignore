@@ -1,0 +1,29 @@
+# Ignore .env file
+.env
+
+# Maven build output
+target/
+!target/simple-crm-1.0.0.jar
+
+# IDE files
+.vscode/
+.idea/
+*.iml
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Runtime files
+*.pid
+
+# Test files
+src/test/
+
+# Maven wrapper (keep only if needed)
+.mvn/wrapper/maven-wrapper.jar
+application.log
