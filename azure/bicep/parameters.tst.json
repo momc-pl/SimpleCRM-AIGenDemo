@@ -9,16 +9,16 @@
       "value": "Poland Central"
     },
     "postgresAdminUsername": {
-      "value": "simplecrm_admin"
+      "value": "${POSTGRES_ADMIN_USERNAME}"
     },
     "postgresAdminPassword": {
-      "value": "SecurePassword123!"
+      "value": "${POSTGRES_ADMIN_PASSWORD}"
     },
     "googleClientId": {
-      "value": "REDACTED_ID"
+      "value": "${GOOGLE_CLIENT_ID}"
     },
     "googleClientSecret": {
-      "value": "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"
+      "value": "${GOOGLE_CLIENT_SECRET}"
     },
     "dnsZoneResourceGroup": {
       "value": "momcpl_rg"
