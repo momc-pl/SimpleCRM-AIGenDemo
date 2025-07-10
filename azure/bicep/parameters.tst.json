@@ -1,0 +1,33 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "environment": {
+      "value": "tst"
+    },
+    "location": {
+      "value": "Poland Central"
+    },
+    "postgresAdminUsername": {
+      "value": "simplecrm_admin"
+    },
+    "postgresAdminPassword": {
+      "value": "SecurePassword123!"
+    },
+    "googleClientId": {
+      "value": "your_google_client_id.apps.googleusercontent.com"
+    },
+    "googleClientSecret": {
+      "value": "your_google_client_secret"
+    },
+    "dnsZoneResourceGroup": {
+      "value": "momcpl_rg"
+    },
+    "domainName": {
+      "value": "momc.pl"
+    },
+    "subdomain": {
+      "value": "simplecrm-tst"
+    }
+  }
+}

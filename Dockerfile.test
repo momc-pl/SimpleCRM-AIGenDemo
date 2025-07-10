@@ -1,0 +1,14 @@
+# Simple test container to verify Azure deployment works
+FROM nginx:alpine
+
+# Create a simple test page
+RUN echo '<html><body><h1>SimpleCRM Test Container</h1><p>Port 80 is working!</p><p>Time: '"$(date)"'</p></body></html>' > /usr/share/nginx/html/index.html
+
+# Add login test page
+RUN echo '<html><body><h1>Login Test Page</h1><p>This confirms the /login path works</p></body></html>' > /usr/share/nginx/html/login.html
+
+# Expose port 80
+EXPOSE 80
+
+# Start nginx
+CMD ["nginx", "-g", "daemon off;"]

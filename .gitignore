@@ -1,0 +1,78 @@
+# Environment Variables (SECRETS)
+.env
+.env.local
+.env.production
+.env.development
+*.env
+
+# Maven
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.jar
+
+# Spring Boot
+*.jar
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# IDE
+.idea/
+*.iws
+*.iml
+*.ipr
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Logs
+*.log
+*.log.*
+logs/
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Azure CLI
+.azure/
+
+# Temporary files
+*.tmp
+*.temp
+*~
+
+# Build artifacts
+build/
+dist/
+out/
+
+# Application specific
+export.txt
+load_env.sh
+
+# Session files
+*session-is-being-continued*.txt
+
+# Docker
+.dockerignore

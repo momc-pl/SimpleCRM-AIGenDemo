@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SimpleCRM - Customer Details</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="/">SimpleCRM</a>
+            <div class="navbar-nav ms-auto">
+                <span class="navbar-text me-3">Welcome, <span th:text="${userName}">User</span>!</span>
+                <a class="btn btn-outline-light btn-sm" href="/logout">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-12">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="/">Dashboard</a></li>
+                        <li class="breadcrumb-item active">Customer Details</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+
+        <div th:if="${customer}" class="row">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h4 class="mb-0">Customer Information</h4>
+                        <a th:href="@{/customers/{id}/edit(id=${customer.id})}" class="btn btn-primary btn-sm">Edit</a>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h6>Name</h6>
+                                <p th:text="${customer.name}">Customer Name</p>
+                            </div>
+                            <div class="col-md-6">
+                                <h6>Email</h6>
+                                <p th:text="${customer.email}">email@example.com</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h6>Phone</h6>
+                                <p th:text="${customer.phone ?: 'Not provided'}">Phone number</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Addresses -->
+                <div class="card mt-3">
+                    <div class="card-header">
+                        <h5 class="mb-0">Addresses</h5>
+                    </div>
+                    <div class="card-body">
+                        <div th:if="${#lists.isEmpty(customer.addresses)}" class="text-muted">
+                            No addresses found for this customer.
+                        </div>
+                        <div th:if="${!#lists.isEmpty(customer.addresses)}">
+                            <div th:each="address : ${customer.addresses}" class="border rounded p-3 mb-2">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <strong th:text="${address.street}">Street Address</strong><br>
+                                        <span th:text="${address.city}">City</span>, <span th:text="${address.zip}">ZIP</span><br>
+                                        <span th:text="${address.country}">Country</span>
+                                    </div>
+                                    <div class="col-md-6 text-end">
+                                        <a th:href="@{/customers/{customerId}/addresses/{addressId}/edit(customerId=${customer.id}, addressId=${address.id})}" 
+                                           class="btn btn-sm btn-outline-primary">Edit</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <!-- Quick Actions -->
+                <div class="card">
+                    <div class="card-header">
+                        <h6 class="mb-0">Quick Actions</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-grid gap-2">
+                            <a th:href="@{/customers/{id}/edit(id=${customer.id})}" class="btn btn-primary">Edit Customer</a>
+                            <a th:href="@{/orders/new?customerId={id}(id=${customer.id})}" class="btn btn-success">Create Order</a>
+                            <a th:href="@{/customers/{id}/orders(id=${customer.id})}" class="btn btn-info">View Orders</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Customer Stats -->
+                <div class="card mt-3">
+                    <div class="card-header">
+                        <h6 class="mb-0">Statistics</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="row text-center">
+                            <div class="col-12">
+                                <h4 th:text="${#lists.size(customer.orders ?: {})}">0</h4>
+                                <small class="text-muted">Total Orders</small>
+                            </div>
+                        </div>
+                        <div class="row text-center mt-2">
+                            <div class="col-12">
+                                <h4 th:text="${#lists.size(customer.addresses ?: {})}">0</h4>
+                                <small class="text-muted">Addresses</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div th:unless="${customer}" class="row">
+            <div class="col-12">
+                <div class="alert alert-warning">
+                    <h4>Customer Not Found</h4>
+                    <p>The requested customer could not be found.</p>
+                    <a href="/" class="btn btn-primary">Return to Dashboard</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
