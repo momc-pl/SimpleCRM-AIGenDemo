@@ -1,0 +1,172 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Order</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container">
+    <h1 class="my-4">Create Order</h1>
+    <form th:action="@{/orders/create}" th:object="${orderDto}" method="post">
+        <div class="form-group">
+            <label for="customer">Customer</label>
+            <select class="form-control" id="customer" th:field="*{customerId}" required>
+                <option value="">Select Customer</option>
+                <option th:each="customer : ${customers}" th:value="${customer.id}" th:text="${customer.name}"></option>
+            </select>
+        </div>
+        <hr>
+        <h4>Order Lines</h4>
+        <div id="order-lines">
+            <div class="form-row align-items-center order-line">
+                <div class="col-md-4">
+                    <label>Product</label>
+                    <select class="form-control product-select" name="orderLines[0].productId">
+                        <option value="">Select Product</option>
+                        <option th:each="product : ${products}" th:value="${product.id}" th:text="${product.name}"
+                                th:data-price-net="${product.priceNet}" th:data-vat-rate="${product.vatRate}"></option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <label>Quantity</label>
+                    <input type="number" class="form-control quantity-input" name="orderLines[0].quantity" min="1" value="1">
+                </div>
+                <div class="col-md-4">
+                    <label>Line Totals</label><br>
+                    Net: <span class="line-net">0.00</span> |
+                    VAT: <span class="line-vat">0.00</span> |
+                    Gross: <span class="line-gross">0.00</span>
+                </div>
+                <div class="col-md-2">
+                    <button type="button" class="btn btn-danger remove-line" style="margin-top: 32px;">Remove</button>
+                </div>
+            </div>
+        </div>
+        <button type="button" id="add-line" class="btn btn-secondary my-3">Add Line</button>
+        <hr>
+        <h4>Order Totals</h4>
+        <p>Total Net: <span id="total-net">0.00</span></p>
+        <p>Total VAT: <span id="total-vat">0.00</span></p>
+        <p>Total Gross: <span id="total-gross">0.00</span></p>
+        <button type="submit" class="btn btn-primary">Create Order</button>
+    </form>
+</div>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    var productsData = {};
+    /*[# th:each="product : ${products}"]*/
+    productsData[/*[[${product.id}]]*/] = {
+        priceNet: /*[[${product.priceNet}]]*/,
+        vatRate: /*[[${product.vatRate}]]*/
+    };
+    /*[/]*/
+
+    function calculateLineTotal(lineElement) {
+        var productId = lineElement.querySelector('.product-select').value;
+        var quantity = parseFloat(lineElement.querySelector('.quantity-input').value);
+
+        if (!productId || isNaN(quantity) || quantity <= 0) {
+            lineElement.querySelector('.line-net').textContent = '0.00';
+            lineElement.querySelector('.line-vat').textContent = '0.00';
+            lineElement.querySelector('.line-gross').textContent = '0.00';
+            return { net: 0, vat: 0, gross: 0 };
+        }
+
+        var product = productsData[productId];
+        if (!product) {
+            console.error('Product data not found for ID:', productId);
+            return { net: 0, vat: 0, gross: 0 };
+        }
+
+        var priceNet = parseFloat(product.priceNet);
+        var vatRate = parseFloat(product.vatRate);
+
+        var lineNet = priceNet * quantity;
+        var lineVat = lineNet * (vatRate / 100);
+        var lineGross = lineNet + lineVat;
+
+        lineElement.querySelector('.line-net').textContent = lineNet.toFixed(2);
+        lineElement.querySelector('.line-vat').textContent = lineVat.toFixed(2);
+        lineElement.querySelector('.line-gross').textContent = lineGross.toFixed(2);
+
+        return { net: lineNet, vat: lineVat, gross: lineGross };
+    }
+
+    function updateOrderTotals() {
+        var totalNet = 0;
+        var totalVat = 0;
+        var totalGross = 0;
+
+        document.querySelectorAll('.order-line').forEach(function (lineElement) {
+            var totals = calculateLineTotal(lineElement);
+            totalNet += totals.net;
+            totalVat += totals.vat;
+            totalGross += totals.gross;
+        });
+
+        document.getElementById('total-net').textContent = totalNet.toFixed(2);
+        document.getElementById('total-vat').textContent = totalVat.toFixed(2);
+        document.getElementById('total-gross').textContent = totalGross.toFixed(2);
+    }
+
+    function addLineEventListeners(newLine) {
+        newLine.querySelector('.product-select').addEventListener('change', updateOrderTotals);
+        newLine.querySelector('.quantity-input').addEventListener('input', updateOrderTotals);
+        newLine.querySelector('.remove-line').addEventListener('click', function () {
+            newLine.remove();
+            updateOrderTotals();
+        });
+    }
+
+    document.getElementById('add-line').addEventListener('click', function () {
+        var orderLines = document.getElementById('order-lines');
+        var index = orderLines.children.length;
+        var newLine = document.createElement('div');
+        newLine.classList.add('form-row', 'align-items-center', 'order-line', 'mt-2');
+        newLine.innerHTML = `
+            <div class="col-md-4">
+                <label>Product</label>
+                <select class="form-control product-select" name="orderLines[${index}].productId">
+                    <option value="">Select Product</option>
+                    <option th:each="product : ${products}" th:value="${product.id}" th:text="${product.name}"
+                            th:data-price-net="${product.priceNet}" th:data-vat-rate="${product.vatRate}"></option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label>Quantity</label>
+                <input type="number" class="form-control quantity-input" name="orderLines[${index}].quantity" min="1" value="1">
+            </div>
+            <div class="col-md-4">
+                <label>Line Totals</label><br>
+                Net: <span class="line-net">0.00</span> |
+                VAT: <span class="line-vat">0.00</span> |
+                Gross: <span class="line-gross">0.00</span>
+            </div>
+            <div class="col-md-2">
+                <button type="button" class="btn btn-danger remove-line" style="margin-top: 32px;">Remove</button>
+            </div>
+        `;
+        orderLines.appendChild(newLine);
+        addLineEventListeners(newLine);
+        updateOrderTotals();
+    });
+
+    // Initial setup for existing lines and event delegation for removal
+    document.querySelectorAll('.order-line').forEach(addLineEventListeners);
+
+    // Event delegation for removing lines (for initial lines)
+    document.getElementById('order-lines').addEventListener('click', function (e) {
+        if (e.target && e.target.classList.contains('remove-line')) {
+            e.target.closest('.order-line').remove();
+            updateOrderTotals(); // Recalculate totals after removal
+        }
+    });
+
+    // Initial calculation on page load
+    updateOrderTotals();
+    /*]]>*/
+</script>
+</body>
+</html>

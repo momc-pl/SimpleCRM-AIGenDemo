@@ -13,7 +13,9 @@
             <a class="navbar-brand" href="/">SimpleCRM</a>
             <div class="navbar-nav ms-auto">
                 <span class="navbar-text me-3">Welcome, <span th:text="${userName}">User</span>!</span>
-                <a class="btn btn-outline-light btn-sm" href="/logout">Logout</a>
+                <form th:action="@{/logout}" method="post" class="d-inline">
+                    <button type="submit" class="btn btn-outline-light btn-sm">Logout</button>
+                </form>
             </div>
         </div>
     </nav>
@@ -92,10 +94,10 @@
                     </div>
                     <div class="card-body">
                         <div class="d-grid gap-2 d-md-flex">
-                            <a href="/customers/new" class="btn btn-primary">Add Customer</a>
-                            <a href="/products/new" class="btn btn-success">Add Product</a>
-                            <a href="/orders/new" class="btn btn-info">Create Order</a>
-                            <a href="/orders" class="btn btn-warning">View Orders</a>
+                            <a href="/customers/add" class="btn btn-primary">Add Customer</a>
+                            <a href="/products/add" class="btn btn-success">Add Product</a>
+                            <a href="/orders/create" class="btn btn-info">Create Order</a>
+                            <a href="/users" class="btn btn-secondary">View Users</a>
                         </div>
                     </div>
                 </div>

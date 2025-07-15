@@ -10,10 +10,10 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    private final CustomOAuth2UserService customOAuth2UserService;
+    private final CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
 
-    public SecurityConfig(CustomOAuth2UserService customOAuth2UserService) {
-        this.customOAuth2UserService = customOAuth2UserService;
+    public SecurityConfig(CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler) {
+        this.customAuthenticationSuccessHandler = customAuthenticationSuccessHandler;
     }
 
     @Bean
@@ -22,15 +22,13 @@ public class SecurityConfig {
             .authorizeRequests(authorizeRequests ->
                 authorizeRequests
                     .antMatchers("/login", "/error").permitAll()
-                    .antMatchers("/", "/orders/**", "/customers/**", "/products/**").authenticated()
+                    .antMatchers("/", "/orders/**", "/customers/**", "/products/**", "/users/**").authenticated()
                     .anyRequest().authenticated()
             )
             .oauth2Login(oauth2Login ->
                 oauth2Login
                     .loginPage("/login")
-                    .userInfoEndpoint(userInfoEndpoint ->
-                        userInfoEndpoint.userService(customOAuth2UserService)
-                    )
+                    .successHandler(customAuthenticationSuccessHandler)
             )
             .logout(logout -> logout.permitAll());
         return http.build();

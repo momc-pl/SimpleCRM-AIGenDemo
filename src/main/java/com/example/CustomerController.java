@@ -21,6 +21,20 @@ public class CustomerController {
         this.addressRepository = addressRepository;
     }
 
+    @GetMapping("/add")
+    public String addCustomerForm(Model model) {
+        addUserNameToModel(model);
+        model.addAttribute("customer", new Customer());
+        return "add-customer";
+    }
+
+    @PostMapping("/add")
+    public String addCustomer(@ModelAttribute Customer customer, RedirectAttributes redirectAttributes) {
+        customerRepository.save(customer);
+        redirectAttributes.addFlashAttribute("message", "Customer added successfully");
+        return "redirect:/dashboard";
+    }
+
     private void addUserNameToModel(Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.getPrincipal() != null) {

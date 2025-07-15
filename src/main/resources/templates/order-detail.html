@@ -1,0 +1,48 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Order Detail</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container">
+    <h1 class="my-4">Order Detail</h1>
+    <div th:if="${order}">
+        <p><strong>Order Number:</strong> <span th:text="${order.orderNumber}"></span></p>
+        <p><strong>Customer:</strong> <span th:text="${order.customer.name}"></span></p>
+        <p><strong>Created At:</strong> <span th:text="${#temporals.format(order.createdAt, 'yyyy-MM-dd HH:mm')}"></span></p>
+        <p><strong>Total Net:</strong> <span th:text="${order.totalNet}"></span></p>
+        <p><strong>Total VAT:</strong> <span th:text="${order.totalVat}"></span></p>
+        <p><strong>Total Gross:</strong> <span th:text="${order.totalGross}"></span></p>
+
+        <h4 class="my-4">Order Lines</h4>
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Product</th>
+                <th>Quantity</th>
+                <th>Unit Price (Net)</th>
+                <th>Line VAT</th>
+                <th>Line Total (Gross)</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="line : ${order.orderLines}">
+                <td th:text="${line.product.name}"></td>
+                <td th:text="${line.quantity}"></td>
+                <td th:text="${line.unitPriceNet}"></td>
+                <td th:text="${line.lineVat}"></td>
+                <td th:text="${line.lineTotalGross}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div th:if="${order == null}">
+        <p>Order not found.</p>
+    </div>
+    <a href="/dashboard" class="btn btn-primary">Back to Dashboard</a>
+</div>
+</body>
+</html>

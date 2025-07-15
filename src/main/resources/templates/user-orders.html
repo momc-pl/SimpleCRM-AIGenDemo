@@ -1,0 +1,35 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>User Orders</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container">
+    <h1 class="my-4">Orders for <span th:text="${user.name}"></span></h1>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Order Number</th>
+            <th>Created At</th>
+            <th>Total Gross</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="order : ${orders}">
+            <td th:text="${order.orderNumber}"></td>
+            <td th:text="${#temporals.format(order.createdAt, 'yyyy-MM-dd HH:mm')}"></td>
+            <td th:text="${order.totalGross}"></td>
+            <td>
+                <a th:href="@{/orders/{id}(id=${order.id})}" class="btn btn-primary">View Order</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <a href="/users" class="btn btn-secondary">Back to Users</a>
+</div>
+</body>
+</html>
